@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "8.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
@@ -9,7 +9,7 @@ group = "dev.kugge"
 version = "0.0.1"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 repositories {
@@ -17,17 +17,18 @@ repositories {
     mavenCentral()
     maven("https://jitpack.io")
     maven("https://oss.sonatype.org/content/groups/public/")
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.bluecolored.de/releases")
 }
 
 dependencies {
-    compileOnly("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
-    compileOnly("com.github.BlueMap-Minecraft:BlueMapAPI:v2.4.0")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("de.bluecolored:bluemap-api:2.7.4")
 }
 
 tasks.compileJava {
     options.encoding = Charsets.UTF_8.name()
-    options.release.set(17)
+    options.release.set(21)
 }
 
 tasks.processResources {

@@ -1,7 +1,6 @@
 package dev.kugge.signmarkers;
 
 import de.bluecolored.bluemap.api.BlueMapAPI;
-import de.bluecolored.bluemap.api.BlueMapMap;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import dev.kugge.signmarkers.watcher.SignDestroyWatcher;
@@ -11,80 +10,86 @@ import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class SignMarkers extends JavaPlugin {
-
-    public static Path webRoot;
-    public static SignMarkers instance;
-    public static Logger logger;
     public static Map<World, MarkerSet> markerSet = new ConcurrentHashMap<>();
 
     @Override
     public void onEnable() {
-        instance = this;
-        logger = getLogger();
         createFiles();
         for (World world : Bukkit.getWorlds()) {
             loadWorldMarkerSet(world);
             registerWorld(world);
         }
-        BlueMapAPI.onEnable(api -> webRoot = api.getWebApp().getWebRoot());
-        Bukkit.getPluginManager().registerEvents(new SignWatcher(), this);
-        Bukkit.getPluginManager().registerEvents(new SignDestroyWatcher(), this);
+        BlueMapAPI.onEnable(api -> {
+            var webRoot = api.getWebApp().getWebRoot();
+            Bukkit.getPluginManager().registerEvents(new SignWatcher(webRoot), this);
+            Bukkit.getPluginManager().registerEvents(new SignDestroyWatcher(), this);
+        });
+
     }
 
     @Override
     public void onDisable() {
-        for (World world : Bukkit.getWorlds()) saveWorldMarkerSet(world);
+        for (World world : Bukkit.getWorlds()){
+            saveWorldMarkerSet(world);
+        }
     }
 
     private void createFiles() {
-        for (World world : Bukkit.getWorlds()) {
-            String name = "marker-set-" + world.getName() + ".json";
-            File file = new File(this.getDataFolder(), name);
+        for (var world : Bukkit.getWorlds()) {
+            var name = "marker-set-" + world.getName() + ".json";
+            var file = new File(this.getDataFolder(), name);
             try {
-                File folder = this.getDataFolder();
-                if (!folder.exists()) folder.mkdirs();
-                if (!file.exists()) file.createNewFile();
+                var folder = this.getDataFolder();
+                if (!folder.exists()){
+                    folder.mkdirs();
+                }
+                if (!file.exists()){
+                    file.createNewFile();
+                }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                getLogger().log(Level.SEVERE, "cannot load json", ex);
             }
         }
     }
 
     private void saveWorldMarkerSet(World world) {
-        String name = "marker-set-" + world.getName() + ".json";
-        File file = new File(this.getDataFolder(), name);
+        var name = "marker-set-" + world.getName() + ".json";
+        var file = new File(this.getDataFolder(), name);
         try (FileWriter writer = new FileWriter(file)) {
             MarkerGson.INSTANCE.toJson(markerSet.get(world), writer);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            getLogger().log(Level.SEVERE, "saveWorldMarkerSet failed", ex);
         }
     }
 
     private void loadWorldMarkerSet(World world) {
-        String name = "marker-set-" + world.getName() + ".json";
-        File file = new File(this.getDataFolder(), name);
+        var name = "marker-set-" + world.getName() + ".json";
+        var file = new File(this.getDataFolder(), name);
         try (FileReader reader = new FileReader(file)) {
-            MarkerSet set = MarkerGson.INSTANCE.fromJson(reader, MarkerSet.class);
-            if (set != null) markerSet.put(world, set);
+            var set = MarkerGson.INSTANCE.fromJson(reader, MarkerSet.class);
+            if (set != null) {
+                markerSet.put(world, set);
+            }
         } catch (FileNotFoundException ignored) {
         } catch (IOException ex) {
-            ex.printStackTrace();
+            getLogger().log(Level.SEVERE, "loadWorldMarkerSet failed", ex);
         }
     }
 
     private void registerWorld(World world) {
         BlueMapAPI.onEnable(api ->
             api.getWorld(world).ifPresent(blueWorld -> {
-                for (BlueMapMap map : blueWorld.getMaps()) {
-                    String label = "sign-markers-" + world.getName();
-                    MarkerSet set = markerSet.get(world);
-                    if (set == null) set = MarkerSet.builder().label(label).build();
+                for (var map : blueWorld.getMaps()) {
+                    var label = "sign-markers-" + world.getName();
+                    var set = markerSet.get(world);
+                    if (set == null) {
+                        set = MarkerSet.builder().label(label).build();
+                    }
                     map.getMarkerSets().put(label, set);
                     markerSet.put(world, set);
                 }

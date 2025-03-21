@@ -1,8 +1,9 @@
 name: BlueMapSignMarkers
 version: ${version}
 main: dev.kugge.signmarkers.SignMarkers
-api-version: 1.19
+api-version: 1.21.4
 folia-supported: true
 authors: [kugge]
+contributors: [luschmar]
 depend: [BlueMap]
 description: Add markers to BlueMap with signs
