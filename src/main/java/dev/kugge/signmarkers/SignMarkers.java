@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SignMarkers extends JavaPlugin {
-    public static Map<World, MarkerSet> markerSet = new ConcurrentHashMap<>();
+    public final Map<World, MarkerSet> markerSet = new ConcurrentHashMap<>();
 
     @Override
     public void onEnable() {
