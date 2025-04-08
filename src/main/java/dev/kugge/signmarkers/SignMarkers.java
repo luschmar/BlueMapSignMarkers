@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class SignMarkers extends JavaPlugin {
-    public final Map<World, MarkerSet> markerSet = new ConcurrentHashMap<>();
+    private final Map<World, MarkerSet> markerSet = new ConcurrentHashMap<>();
 
     @Override
     public void onEnable() {
@@ -26,15 +26,14 @@ public class SignMarkers extends JavaPlugin {
         }
         BlueMapAPI.onEnable(api -> {
             var webRoot = api.getWebApp().getWebRoot();
-            Bukkit.getPluginManager().registerEvents(new SignWatcher(webRoot), this);
-            Bukkit.getPluginManager().registerEvents(new SignDestroyWatcher(), this);
+            Bukkit.getPluginManager().registerEvents(new SignWatcher(markerSet, webRoot), this);
+            Bukkit.getPluginManager().registerEvents(new SignDestroyWatcher(markerSet), this);
         });
-
     }
 
     @Override
     public void onDisable() {
-        for (World world : Bukkit.getWorlds()){
+        for (World world : Bukkit.getWorlds()) {
             saveWorldMarkerSet(world);
         }
     }
@@ -45,10 +44,10 @@ public class SignMarkers extends JavaPlugin {
             var file = new File(this.getDataFolder(), name);
             try {
                 var folder = this.getDataFolder();
-                if (!folder.exists()){
+                if (!folder.exists()) {
                     folder.mkdirs();
                 }
-                if (!file.exists()){
+                if (!file.exists()) {
                     file.createNewFile();
                 }
             } catch (IOException ex) {
@@ -83,17 +82,17 @@ public class SignMarkers extends JavaPlugin {
 
     private void registerWorld(World world) {
         BlueMapAPI.onEnable(api ->
-            api.getWorld(world).ifPresent(blueWorld -> {
-                for (var map : blueWorld.getMaps()) {
-                    var label = "sign-markers-" + world.getName();
-                    var set = markerSet.get(world);
-                    if (set == null) {
-                        set = MarkerSet.builder().label(label).build();
+                api.getWorld(world).ifPresent(blueWorld -> {
+                    for (var map : blueWorld.getMaps()) {
+                        var label = "sign-markers-" + world.getName();
+                        var set = markerSet.get(world);
+                        if (set == null) {
+                            set = MarkerSet.builder().label(label).build();
+                        }
+                        map.getMarkerSets().put(label, set);
+                        markerSet.put(world, set);
                     }
-                    map.getMarkerSets().put(label, set);
-                    markerSet.put(world, set);
-                }
-            })
+                })
         );
     }
 }

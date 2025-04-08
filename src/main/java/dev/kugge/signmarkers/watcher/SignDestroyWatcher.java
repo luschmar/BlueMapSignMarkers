@@ -1,13 +1,21 @@
 package dev.kugge.signmarkers.watcher;
 
 import com.flowpowered.math.vector.Vector3d;
-import dev.kugge.signmarkers.SignMarkers;
+import de.bluecolored.bluemap.api.markers.MarkerSet;
+import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import java.util.Map;
+
 public class SignDestroyWatcher implements Listener {
+    private final Map<World, MarkerSet> markerSet;
+
+    public SignDestroyWatcher(Map<World, MarkerSet> markerSet) {
+        this.markerSet = markerSet;
+    }
 
     @EventHandler
     public void onSignDestroy(BlockBreakEvent event) {
@@ -15,7 +23,7 @@ public class SignDestroyWatcher implements Listener {
         if (!(block.getState() instanceof Sign)) {
             return;
         }
-        var set = SignMarkers.markerSet.get(block.getWorld());
+        var set = markerSet.get(block.getWorld());
         if (set == null) {
             return;
         }
