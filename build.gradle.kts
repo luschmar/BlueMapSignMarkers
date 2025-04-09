@@ -24,6 +24,16 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("de.bluecolored:bluemap-api:2.7.4")
+
+    testImplementation("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    testImplementation("de.bluecolored:bluemap-api:2.7.4")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.17.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.12.1")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.compileJava {
