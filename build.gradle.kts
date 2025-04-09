@@ -5,7 +5,7 @@ plugins {
 }
 
 
-group = "dev.kugge"
+group = "ch.luschmar"
 version = "0.0.1"
 
 java {
@@ -36,7 +36,7 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-    archiveFileName.set("SignMarkers-${project.version}.jar")
+    archiveFileName.set("SignMarkers.jar")
 }
 
 tasks.jar {

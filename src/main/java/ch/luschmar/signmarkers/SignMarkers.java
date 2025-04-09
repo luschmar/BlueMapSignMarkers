@@ -1,10 +1,10 @@
-package dev.kugge.signmarkers;
+package ch.luschmar.signmarkers;
 
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
-import dev.kugge.signmarkers.watcher.SignDestroyWatcher;
-import dev.kugge.signmarkers.watcher.SignWatcher;
+import ch.luschmar.signmarkers.watcher.SignDestroyWatcher;
+import ch.luschmar.signmarkers.watcher.SignWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;

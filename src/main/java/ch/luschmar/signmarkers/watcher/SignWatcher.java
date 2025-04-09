@@ -1,4 +1,4 @@
-package dev.kugge.signmarkers.watcher;
+package ch.luschmar.signmarkers.watcher;
 
 import com.flowpowered.math.vector.Vector2i;
 import com.flowpowered.math.vector.Vector3d;

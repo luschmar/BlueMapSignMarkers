@@ -1,6 +1,6 @@
 name: BlueMapSignMarkers
 version: ${version}
-main: dev.kugge.signmarkers.SignMarkers
+main: ch.luschmar.signmarkers.SignMarkers
 api-version: 1.21.4
 folia-supported: true
 authors: [kugge]
