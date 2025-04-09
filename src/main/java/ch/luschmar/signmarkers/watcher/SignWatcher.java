@@ -5,7 +5,6 @@ import com.flowpowered.math.vector.Vector3d;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.markers.POIMarker;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
+
+import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
 
 public class SignWatcher implements Listener {
     private final Map<World, MarkerSet> markerSet;
@@ -41,7 +42,7 @@ public class SignWatcher implements Listener {
             return;
         }
 
-        var icon = "./markers/" + LegacyComponentSerializer.legacySection().serialize(cicon) + ".png";
+        var icon = "./markers/" + legacySection().serialize(cicon) + ".png";
         var iconFile = new File(webRoot + "/" + icon);
         if (!iconFile.exists()) {
             return;
@@ -64,8 +65,8 @@ public class SignWatcher implements Listener {
         }
 
         var clabel2 = event.line(2);
-        var label = LegacyComponentSerializer.legacySection().serialize(clabel1)
-                + LegacyComponentSerializer.legacySection().serialize(clabel2);
+        var label = legacySection().serialize(clabel1)
+                + legacySection().serialize(clabel2);
 
         var block = event.getBlock();
         var pos = new Vector3d(block.getX(), block.getY(), block.getZ());
